@@ -3,67 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Python Profile Manager</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background: #f3f6fa; margin: 0; color: #1d2939; }
-    main { max-width: 560px; margin: 60px auto; padding: 28px; background: white; border-radius: 16px; box-shadow: 0 8px 30px #1d293914; }
-    h1 { margin-top: 0; }
-    label { display: block; font-weight: 600; margin-top: 16px; }
-    input, textarea { width: 100%; box-sizing: border-box; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
-    button { margin-top: 20px; padding: 12px 18px; background: #175cd3; color: white; border: 0; border-radius: 8px; cursor: pointer; }
-    #status { min-height: 24px; }
-  </style>
+  <title>Python Girls That Code</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-  <main>
-    <h1>Python Profile Manager</h1>
-    <p>A small FastAPI + MongoDB learning application.</p>
-    <form id="profile-form">
-      <label for="name">Name</label>
-      <input id="name" required>
-      <label for="email">Email</label>
-      <input id="email" type="email" required>
-      <label for="job_title">Job title</label>
-      <input id="job_title">
-      <label for="bio">Bio</label>
-      <textarea id="bio" rows="4"></textarea>
-      <button type="submit">Save profile</button>
-    </form>
-    <p id="status" role="status"></p>
+  <main class="profile-card">
+
+    <section class="illustration-panel" aria-label="Girl coding illustration">
+      <img
+        src="/static/images/coding-girl.png"
+        alt="A girl coding in a cozy workspace"
+      >
+    </section>
+
+    <section class="form-panel">
+      <div class="brand">
+        <span class="brand-icon">🐍</span>
+        <div>
+          <h1>Python <em>Girls</em> That Code<span class="sparkle"> ✨</span></h1>
+          <p class="subtitle">
+            A little corner of the internet for girls who code. 💜
+          </p>
+        </div>
+      </div>
+
+      <form id="profile-form">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter your name"
+          required
+        >
+
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          required
+        >
+
+        <label for="job_title">Job title</label>
+        <input
+          id="job_title"
+          type="text"
+          placeholder="e.g. DevOps Engineer"
+        >
+
+        <label for="bio">Bio</label>
+        <textarea
+          id="bio"
+          rows="3"
+          placeholder="Tell us a little about yourself..."
+        ></textarea>
+
+        <label for="skills">Skills</label>
+        <input
+          id="skills"
+          type="text"
+          placeholder="Python, Docker, FastAPI, MongoDB"
+        >
+        <p class="field-hint">Separate your skills with commas.</p>
+
+        <button type="submit">♡ Save profile</button>
+      </form>
+
+      <p id="status" role="status" aria-live="polite"></p>
+
+      <p class="footer-note">Made with Python, curiosity & a little magic ✨</p>
+    </section>
+
   </main>
+
   <script>
-    const fields = ["name", "email", "job_title", "bio"];
+    const fields = ["name", "email", "job_title", "bio", "skills"];
     const status = document.getElementById("status");
 
     async function loadProfile() {
       try {
         const response = await fetch("/get-profile");
-        if (!response.ok) throw new Error("Unable to load profile");
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            status.textContent = "No profile yet. Create your first one! 💜";
+            return;
+          }
+          throw new Error("Unable to load profile");
+        }
+
         const profile = await response.json();
+
         fields.forEach(field => {
           document.getElementById(field).value = profile[field] ?? "";
         });
+
+        status.textContent = "Profile loaded successfully 💜";
       } catch (error) {
         status.textContent = error.message;
       }
     }
 
-    document.getElementById("profile-form").addEventListener("submit", async event => {
-      event.preventDefault();
-      status.textContent = "Saving...";
-      const profile = Object.fromEntries(fields.map(field => [field, document.getElementById(field).value]));
-      try {
-        const response = await fetch("/update-profile", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(profile)
-        });
-        if (!response.ok) throw new Error("Unable to save profile");
-        status.textContent = (await response.json()).message;
-      } catch (error) {
-        status.textContent = error.message;
+    document.getElementById("profile-form").addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
+        status.textContent = "Saving your profile...";
+
+        const profile = Object.fromEntries(
+          fields.map(field => [
+            field,
+            document.getElementById(field).value
+          ])
+        );
+
+        try {
+          const response = await fetch("/update-profile", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(profile)
+          });
+
+          if (!response.ok) {
+            throw new Error("Unable to save profile");
+          }
+
+          const result = await response.json();
+          status.textContent = result.message ?? "Profile saved! 💜";
+        } catch (error) {
+          status.textContent = error.message;
+        }
       }
-    });
+    );
 
     loadProfile();
   </script>
