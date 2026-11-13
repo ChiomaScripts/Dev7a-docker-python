@@ -6,21 +6,30 @@
   <title>Python Girls That Code</title>
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
+
 <body>
   <main class="profile-card">
 
-    <section class="illustration-panel" aria-label="Girl coding illustration">
+    <!-- Coding girl illustration -->
+    <section class="illustration-panel"
+             aria-label="Girl coding illustration">
       <img
         src="/static/images/coding-girl.png"
         alt="A girl coding in a cozy workspace"
       >
     </section>
 
+    <!-- Profile form and members directory -->
     <section class="form-panel">
+
       <div class="brand">
         <span class="brand-icon">🐍</span>
         <div>
-          <h1>Python <em>Girls</em> That Code<span class="sparkle"> ✨</span></h1>
+          <h1>
+            Python <em>Girls</em> That Code
+            <span class="sparkle">✨</span>
+          </h1>
+
           <p class="subtitle">
             A little corner of the internet for girls who code. 💜
           </p>
@@ -28,6 +37,7 @@
       </div>
 
       <form id="profile-form">
+
         <label for="name">Name</label>
         <input
           id="name"
@@ -64,81 +74,298 @@
           type="text"
           placeholder="Python, Docker, FastAPI, MongoDB"
         >
-        <p class="field-hint">Separate your skills with commas.</p>
 
-        <button type="submit">♡ Save profile</button>
+        <p class="field-hint">
+          Separate your skills with commas.
+        </p>
+
+        <div class="form-actions">
+          <button id="save-button" type="submit">
+            ♡ Add member
+          </button>
+
+          <button
+            id="cancel-button"
+            type="button"
+            class="secondary-button"
+            hidden
+          >
+            Cancel editing
+          </button>
+        </div>
+
       </form>
 
       <p id="status" role="status" aria-live="polite"></p>
 
-      <p class="footer-note">Made with Python, curiosity & a little magic ✨</p>
-    </section>
+      <!-- Members directory -->
+      <section class="members-section">
+        <div class="members-heading">
+          <div>
+            <h2>Our Coding Girls 💜</h2>
+            <p class="members-subtitle">
+              Meet the lovely minds behind the code.
+            </p>
+          </div>
 
+          <span id="member-count" class="member-count">
+            0 members
+          </span>
+        </div>
+
+        <div id="members-list" class="members-list">
+          Loading our coding girls...
+        </div>
+      </section>
+
+      <p class="footer-note">
+        Made with Python, curiosity & a little magic ✨
+      </p>
+
+    </section>
   </main>
 
   <script>
-    const fields = ["name", "email", "job_title", "bio", "skills"];
-    const status = document.getElementById("status");
+    const fields = [
+      "name",
+      "email",
+      "job_title",
+      "bio",
+      "skills"
+    ];
 
-    async function loadProfile() {
+    const status = document.getElementById("status");
+    const form = document.getElementById("profile-form");
+    const membersList = document.getElementById("members-list");
+    const memberCount = document.getElementById("member-count");
+    const saveButton = document.getElementById("save-button");
+    const cancelButton = document.getElementById("cancel-button");
+
+    let editingProfileId = null;
+
+
+    // Read all values entered into the form
+    function getFormData() {
+      return Object.fromEntries(
+        fields.map(field => [
+          field,
+          document.getElementById(field).value
+        ])
+      );
+    }
+
+
+    // Reset the form to create mode
+    function resetForm() {
+      editingProfileId = null;
+      form.reset();
+
+      saveButton.textContent = "♡ Add member";
+      cancelButton.hidden = true;
+    }
+
+
+    // Display an existing member's details for editing
+    function editProfile(profile) {
+      editingProfileId = profile.id;
+
+      fields.forEach(field => {
+        document.getElementById(field).value =
+          profile[field] ?? "";
+      });
+
+      saveButton.textContent = "♡ Update profile";
+      cancelButton.hidden = false;
+
+      status.textContent =
+        `You're editing ${profile.name}'s profile 💜`;
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+
+    // Retrieve all members from FastAPI
+    async function loadProfiles() {
       try {
-        const response = await fetch("/get-profile");
+        const response = await fetch("/profiles");
 
         if (!response.ok) {
-          if (response.status === 404) {
-            status.textContent = "No profile yet. Create your first one! 💜";
-            return;
-          }
-          throw new Error("Unable to load profile");
+          throw new Error("Unable to load members");
         }
 
-        const profile = await response.json();
+        const profiles = await response.json();
 
-        fields.forEach(field => {
-          document.getElementById(field).value = profile[field] ?? "";
+        membersList.replaceChildren();
+
+        memberCount.textContent =
+          `${profiles.length} member${profiles.length === 1 ? "" : "s"}`;
+
+        if (profiles.length === 0) {
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className = "empty-message";
+          emptyMessage.textContent =
+            "No members yet. Be the first coding girl! 💜";
+
+          membersList.appendChild(emptyMessage);
+          return;
+        }
+
+        // Create one member card for every MongoDB document
+        profiles.forEach(profile => {
+          const card = document.createElement("article");
+          card.className = "member-card";
+
+          const avatar = document.createElement("div");
+          avatar.className = "member-avatar";
+          avatar.textContent =
+            (profile.name || "?").charAt(0).toUpperCase();
+
+          const info = document.createElement("div");
+          info.className = "member-info";
+
+          const name = document.createElement("h3");
+          name.textContent = profile.name;
+
+          const jobTitle = document.createElement("p");
+          jobTitle.className = "member-job";
+          jobTitle.textContent =
+            profile.job_title || "Coding enthusiast";
+
+          const skills = document.createElement("p");
+          skills.className = "member-skills";
+          skills.textContent =
+            profile.skills
+              ? `✨ ${profile.skills}`
+              : "Skills coming soon...";
+
+          info.append(name, jobTitle, skills);
+
+          const actions = document.createElement("div");
+          actions.className = "member-actions";
+
+          // Edit member
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.className = "edit-button";
+          editButton.textContent = "Edit";
+
+          editButton.addEventListener("click", () => {
+            editProfile(profile);
+          });
+
+          // Delete member
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.className = "delete-button";
+          deleteButton.textContent = "Delete";
+
+          deleteButton.addEventListener("click", async () => {
+            const confirmed = confirm(
+              `Are you sure you want to delete ${profile.name}'s profile?`
+            );
+
+            if (!confirmed) return;
+
+            try {
+              const response = await fetch(
+                `/profiles/${profile.id}`,
+                { method: "DELETE" }
+              );
+
+              if (!response.ok) {
+                throw new Error("Unable to delete profile");
+              }
+
+              if (editingProfileId === profile.id) {
+                resetForm();
+              }
+
+              status.textContent =
+                `${profile.name}'s profile was deleted.`;
+
+              await loadProfiles();
+
+            } catch (error) {
+              status.textContent = error.message;
+            }
+          });
+
+          actions.append(editButton, deleteButton);
+          card.append(avatar, info, actions);
+
+          membersList.appendChild(card);
         });
 
-        status.textContent = "Profile loaded successfully 💜";
       } catch (error) {
+        membersList.textContent = "Unable to load members.";
         status.textContent = error.message;
       }
     }
 
-    document.getElementById("profile-form").addEventListener(
-      "submit",
-      async event => {
-        event.preventDefault();
-        status.textContent = "Saving your profile...";
 
-        const profile = Object.fromEntries(
-          fields.map(field => [
-            field,
-            document.getElementById(field).value
-          ])
-        );
+    // Create or update a member
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
 
-        try {
-          const response = await fetch("/update-profile", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(profile)
-          });
+      const isEditing = editingProfileId !== null;
 
-          if (!response.ok) {
-            throw new Error("Unable to save profile");
-          }
+      const url = isEditing
+        ? `/profiles/${editingProfileId}`
+        : "/profiles";
 
-          const result = await response.json();
-          status.textContent = result.message ?? "Profile saved! 💜";
-        } catch (error) {
-          status.textContent = error.message;
+      const method = isEditing ? "PUT" : "POST";
+
+      status.textContent = "Saving your profile...";
+      saveButton.disabled = true;
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(getFormData())
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+
+          throw new Error(
+            typeof errorData.detail === "string"
+              ? errorData.detail
+              : "Unable to save profile"
+          );
         }
-      }
-    );
 
-    loadProfile();
+        status.textContent = isEditing
+          ? "Profile updated successfully 💜"
+          : "Welcome to Python Girls That Code! 💜";
+
+        resetForm();
+
+        await loadProfiles();
+
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        saveButton.disabled = false;
+      }
+    });
+
+
+    // Cancel editing and return to create mode
+    cancelButton.addEventListener("click", () => {
+      resetForm();
+      status.textContent = "Ready for a new member 💜";
+    });
+
+
+    // Load existing members when the page opens
+    loadProfiles();
   </script>
+
 </body>
 </html>
