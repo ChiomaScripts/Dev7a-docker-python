@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python Profile Manager</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f3f6fa; margin: 0; color: #1d2939; }
+    main { max-width: 560px; margin: 60px auto; padding: 28px; background: white; border-radius: 16px; box-shadow: 0 8px 30px #1d293914; }
+    h1 { margin-top: 0; }
+    label { display: block; font-weight: 600; margin-top: 16px; }
+    input, textarea { width: 100%; box-sizing: border-box; padding: 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+    button { margin-top: 20px; padding: 12px 18px; background: #175cd3; color: white; border: 0; border-radius: 8px; cursor: pointer; }
+    #status { min-height: 24px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Python Profile Manager</h1>
+    <p>A small FastAPI + MongoDB learning application.</p>
+    <form id="profile-form">
+      <label for="name">Name</label>
+      <input id="name" required>
+      <label for="email">Email</label>
+      <input id="email" type="email" required>
+      <label for="job_title">Job title</label>
+      <input id="job_title">
+      <label for="bio">Bio</label>
+      <textarea id="bio" rows="4"></textarea>
+      <button type="submit">Save profile</button>
+    </form>
+    <p id="status" role="status"></p>
+  </main>
+  <script>
+    const fields = ["name", "email", "job_title", "bio"];
+    const status = document.getElementById("status");
+
+    async function loadProfile() {
+      try {
+        const response = await fetch("/get-profile");
+        if (!response.ok) throw new Error("Unable to load profile");
+        const profile = await response.json();
+        fields.forEach(field => {
+          document.getElementById(field).value = profile[field] ?? "";
+        });
+      } catch (error) {
+        status.textContent = error.message;
+      }
+    }
+
+    document.getElementById("profile-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      status.textContent = "Saving...";
+      const profile = Object.fromEntries(fields.map(field => [field, document.getElementById(field).value]));
+      try {
+        const response = await fetch("/update-profile", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(profile)
+        });
+        if (!response.ok) throw new Error("Unable to save profile");
+        status.textContent = (await response.json()).message;
+      } catch (error) {
+        status.textContent = error.message;
+      }
+    });
+
+    loadProfile();
+  </script>
+</body>
+</html>
