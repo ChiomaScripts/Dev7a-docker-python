@@ -1,9 +1,24 @@
 import os
+from pathlib import Path
 
+from dotenv import load_dotenv
 from pymongo import MongoClient
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+# Locate and load the project's .env file
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
-client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=3000)
-database = client["user_account"]
-profiles = database["users"]
+# Retrieve MongoDB configuration
+MONGO_URI = os.environ["MONGO_URI"]
+DATABASE_NAME = os.getenv("MONGO_DB_NAME", "user-account")
+COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME", "users")
+
+# Initialise MongoDB client
+client = MongoClient(
+    MONGO_URI,
+    serverSelectionTimeoutMS=3000
+)
+
+# Select database and collection
+database = client[DATABASE_NAME]
+profiles = database[COLLECTION_NAME]

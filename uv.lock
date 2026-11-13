@@ -49,6 +49,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "pymongo" },
+    { name = "python-dotenv" },
     { name = "uvicorn" },
 ]
 
@@ -56,6 +57,7 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.162.7" },
     { name = "pymongo", specifier = ">=4.20.0" },
+    { name = "python-dotenv", specifier = ">=1.2.4" },
     { name = "uvicorn", specifier = ">=0.54.0" },
 ]
 
@@ -179,6 +181,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5a/98/2834416a85d5f5d3675d55bec5e1392fc3d2b71ec492a7532ea62a2b6183/pymongo-4.20.0-cp313-cp313-win32.whl", hash = "sha256:04ddff3cf3d4464b1dba76a8b55a8486a3242d7acb93cd440ff8c307541ca36e", size = 818086, upload-time = "2026-11-12T20:51:17.554Z" },
     { url = "https://files.pythonhosted.org/packages/5a/1a/850f4cf19ff9956af7926fd7355ce4bcae387da5292fdfe083bfd6885a64/pymongo-4.20.0-cp313-cp313-win_amd64.whl", hash = "sha256:87676b93e2d779da66f44a6211ec6d7cdbeb9328ec6826bb4ed6163f2a06218a", size = 823665, upload-time = "2026-11-12T20:51:19.077Z" },
     { url = "https://files.pythonhosted.org/packages/71/e9/ff99f25e9351ba26a96bfc7e402a8e70ee17690e7395f59f4915b13a20d1/pymongo-4.20.0-cp313-cp313-win_arm64.whl", hash = "sha256:c43d09c28d9854808a6e1b48d7e36ae142a5ffd540e800f4d49329d896ce2f68", size = 820742, upload-time = "2026-11-12T20:51:20.486Z" },
+]
+
+[[package]]
+name = "python-dotenv"
+version = "1.2.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/26/2fbeedb218a787a5eea551c7532cac4e009f83d689dd2faa0d0353473f86/python_dotenv-1.2.4.tar.gz", hash = "sha256:f0d53e69935a851c0dcc78f3ab7aaccd8cabef0b92382b576b824212902873c0", size = 60824, upload-time = "2026-10-01T05:36:10Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/60/d1/38f3a3405989a89ac18390803e70c6ad7c7760da4f9b83cbeca0c44a0c72/python_dotenv-1.2.4-py3-none-any.whl", hash = "sha256:42269a8a5b3fd54ffa6f3d84b18abed50064717576b4ecf03dc4a55d8aa04fdc", size = 23266, upload-time = "2026-10-01T05:36:08.633Z" },
 ]
 
 [[package]]
