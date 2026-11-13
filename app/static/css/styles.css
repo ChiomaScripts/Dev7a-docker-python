@@ -222,6 +222,35 @@ button:disabled {
   color: var(--muted);
 }
 
+/* Directory toggle button */
+
+.directory-toggle {
+  width: 100%;
+  margin-top: 4px;
+  padding: 15px 20px;
+  background: linear-gradient(120deg, #f0ddff, #e6cbfa);
+  color: var(--purple-dark);
+  border: 1px solid #dfc2f5;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.directory-toggle:hover {
+  background: linear-gradient(120deg, #e9caff, #dab4f5);
+}
+
+/* Directory content */
+
+#directory-content {
+  margin-top: 18px;
+}
+
+.directory-summary {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 .member-count {
   padding: 7px 12px;
   border-radius: 20px;

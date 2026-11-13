@@ -36,6 +36,7 @@
         </div>
       </div>
 
+      <!-- Profile registration form -->
       <form id="profile-form">
 
         <label for="name">Name</label>
@@ -81,7 +82,7 @@
 
         <div class="form-actions">
           <button id="save-button" type="submit">
-            ♡ Add member
+            ♡ Create my profile
           </button>
 
           <button
@@ -96,10 +97,13 @@
 
       </form>
 
-      <p id="status" role="status" aria-live="polite"></p>
+      <p id="status" role="status" aria-live="polite">
+        Welcome to Python Girls That Code! 💜
+      </p>
 
       <!-- Members directory -->
       <section class="members-section">
+
         <div class="members-heading">
           <div>
             <h2>Our Coding Girls 💜</h2>
@@ -107,25 +111,43 @@
               Meet the lovely minds behind the code.
             </p>
           </div>
-
-          <span id="member-count" class="member-count">
-            0 members
-          </span>
         </div>
 
-        <div id="members-list" class="members-list">
-          Loading our coding girls...
+        <!-- Visitors choose when to load the directory -->
+        <button
+          id="toggle-members"
+          type="button"
+          class="directory-toggle"
+          aria-expanded="false"
+          aria-controls="directory-content"
+        >
+          ♡ Meet Our Coding Girls
+        </button>
+
+        <!-- Hidden until the visitor clicks the button -->
+        <div id="directory-content" hidden>
+
+          <div class="directory-summary">
+            <span id="member-count" class="member-count">
+              0 members
+            </span>
+          </div>
+
+          <div id="members-list" class="members-list"></div>
+
         </div>
+
       </section>
 
       <p class="footer-note">
-        Made with Python, curiosity & a little magic ✨
+        Made with Python, curiosity &amp; a little magic ✨
       </p>
 
     </section>
   </main>
 
   <script>
+    // Profile fields shared by create and update operations
     const fields = [
       "name",
       "email",
@@ -134,14 +156,21 @@
       "skills"
     ];
 
+    // Reference the HTML elements
     const status = document.getElementById("status");
     const form = document.getElementById("profile-form");
     const membersList = document.getElementById("members-list");
     const memberCount = document.getElementById("member-count");
     const saveButton = document.getElementById("save-button");
     const cancelButton = document.getElementById("cancel-button");
+    const toggleMembers = document.getElementById("toggle-members");
+    const directoryContent = document.getElementById("directory-content");
 
+    // Track whether we are creating or editing a profile
     let editingProfileId = null;
+
+    // Track whether the directory needs fresh data
+    let directoryLoaded = false;
 
 
     // Read all values entered into the form
@@ -160,7 +189,7 @@
       editingProfileId = null;
       form.reset();
 
-      saveButton.textContent = "♡ Add member";
+      saveButton.textContent = "♡ Create my profile";
       cancelButton.hidden = true;
     }
 
@@ -174,7 +203,7 @@
           profile[field] ?? "";
       });
 
-      saveButton.textContent = "♡ Update profile";
+      saveButton.textContent = "♡ Save changes";
       cancelButton.hidden = false;
 
       status.textContent =
@@ -210,6 +239,7 @@
             "No members yet. Be the first coding girl! 💜";
 
           membersList.appendChild(emptyMessage);
+          directoryLoaded = true;
           return;
         }
 
@@ -236,10 +266,9 @@
 
           const skills = document.createElement("p");
           skills.className = "member-skills";
-          skills.textContent =
-            profile.skills
-              ? `✨ ${profile.skills}`
-              : "Skills coming soon...";
+          skills.textContent = profile.skills
+            ? `✨ ${profile.skills}`
+            : "Skills coming soon...";
 
           info.append(name, jobTitle, skills);
 
@@ -269,6 +298,8 @@
 
             if (!confirmed) return;
 
+            deleteButton.disabled = true;
+
             try {
               const response = await fetch(
                 `/profiles/${profile.id}`,
@@ -286,10 +317,12 @@
               status.textContent =
                 `${profile.name}'s profile was deleted.`;
 
+              directoryLoaded = false;
               await loadProfiles();
 
             } catch (error) {
               status.textContent = error.message;
+              deleteButton.disabled = false;
             }
           });
 
@@ -299,14 +332,40 @@
           membersList.appendChild(card);
         });
 
+        directoryLoaded = true;
+
       } catch (error) {
+        directoryLoaded = false;
         membersList.textContent = "Unable to load members.";
         status.textContent = error.message;
       }
     }
 
 
-    // Create or update a member
+    // Open or close the members directory
+    toggleMembers.addEventListener("click", async () => {
+      const isOpening = directoryContent.hidden;
+
+      directoryContent.hidden = !isOpening;
+
+      toggleMembers.setAttribute(
+        "aria-expanded",
+        String(isOpening)
+      );
+
+      toggleMembers.textContent = isOpening
+        ? "♡ Hide Our Coding Girls"
+        : "♡ Meet Our Coding Girls";
+
+      // Fetch from MongoDB only when opening an unloaded directory
+      if (isOpening && !directoryLoaded) {
+        membersList.textContent = "Loading our coding girls...";
+        await loadProfiles();
+      }
+    });
+
+
+    // Create or update a profile
     form.addEventListener("submit", async event => {
       event.preventDefault();
 
@@ -331,7 +390,8 @@
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
+          const errorData = await response.json()
+            .catch(() => ({}));
 
           throw new Error(
             typeof errorData.detail === "string"
@@ -346,7 +406,12 @@
 
         resetForm();
 
-        await loadProfiles();
+        // Keep directory up to date without opening it automatically
+        directoryLoaded = false;
+
+        if (!directoryContent.hidden) {
+          await loadProfiles();
+        }
 
       } catch (error) {
         status.textContent = error.message;
@@ -359,12 +424,12 @@
     // Cancel editing and return to create mode
     cancelButton.addEventListener("click", () => {
       resetForm();
-      status.textContent = "Ready for a new member 💜";
+      status.textContent = "Ready to create your profile 💜";
     });
 
 
-    // Load existing members when the page opens
-    loadProfiles();
+    // No automatic loadProfiles() call.
+    // Members are retrieved when the visitor opens the directory.
   </script>
 
 </body>
