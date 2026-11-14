@@ -57,7 +57,6 @@ The final implementation packages FastAPI into a custom Docker image and runs it
 
 The project was completed in two stages: **local FastAPI development against containerised MongoDB**, followed by **a fully containerised three-service application**. This distinction is important because the correct MongoDB hostname depends on where FastAPI runs.
 
-> **Architecture diagram to add:** Create `architecture/docker-local-development-workflow.png` showing the Windows browser → FastAPI `localhost:8000` published port → `python-girls-app` container; FastAPI → `chioma_mongodb:27017` over `mongo-net`; Mongo Express → MongoDB over `mongo-net`; browser → Mongo Express `localhost:8081`. Label host ports separately from container ports.
 
 ![Final three-container application architecture](architecture/docker-local-development-workflow.png)
 
