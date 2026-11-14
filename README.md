@@ -787,33 +787,7 @@ This demonstrates that the web application is being served by the container rath
 ---
 
 
-### Repository screenshot folders
 
-Create the folders at the repository root, **alongside** `Dockerfile` and `README.md`:
-
-```text
-Dev7a-docker-python/
-├── README.md
-├── Dockerfile
-├── architecture/
-│   └── docker-local-development-workflow.png
-└── evidence/
-    ├── 01-docker-engine-recovery.png
-    ├── 02-downloaded-docker-images.png
-    ├── 03-custom-docker-network.png
-    ├── 04-mongo-express-database.png
-    ├── 05-mongodb-port-troubleshooting.png
-    ├── 06-python-mongodb-connectivity.png
-    ├── 07-python-girls-frontend.png
-    ├── 08-mongodb-stored-profile.png
-    ├── 09-fastapi-dockerfile.png
-    ├── 10-docker-build-success.png
-    ├── 11-custom-image-verification.png
-    ├── 12-three-running-containers.png
-    └── 13-fastapi-container-logs.png
-```
-
-GitHub renders a Markdown image reference such as `![Docker network](evidence/03-custom-docker-network.png)` only after the matching image file has been committed at that exact relative path. Do not commit the README with broken image links: add the images and diagram first, or temporarily comment out references to files not yet ready. Crop away unrelated content, retain relevant command output, and redact credentials, email addresses and personal information.
 
 ---
 
