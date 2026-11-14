@@ -11,7 +11,7 @@ Part of my hands-on DevOps engineering portfolio, documenting my progression thr
 
 This project explores how Docker can be used to establish a local development environment where an application communicates with a database running inside a container.
 
-The original training demonstration uses a Node.js application alongside MongoDB and Mongo Express. I chose to adapt the implementation using **Python and FastAPI**, building my own application rather than relying entirely on the provided JavaScript source code.
+The original training demo uses a Node.js application alongside MongoDB and Mongo Express. I chose to adapt the implementation using **Python and FastAPI**, building my own application rather than relying entirely on the provided JavaScript source code.
 
 This allowed me to combine my existing Python knowledge with new Docker concepts while gaining practical experience in application development, database integration, container networking and troubleshooting.
 
