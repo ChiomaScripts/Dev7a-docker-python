@@ -784,8 +784,6 @@ This demonstrates that the web application is being served by the container rath
 
 ![Uvicorn startup logs confirming the FastAPI container is serving on port 8000.](evidence/13-fastapi-container-logs.png)
 
----
-
 
 
 
