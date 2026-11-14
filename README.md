@@ -5,6 +5,22 @@
 Part of my hands-on DevOps engineering portfolio, documenting my progression through containerisation, application deployment, infrastructure automation and cloud technologies.
 
 
+### Project at a Glance
+
+**Application:** Python Girls That Code — a custom FastAPI application for creating, viewing, updating and deleting coding profiles.
+
+**Architecture:** Three Docker containers connected through a user-defined bridge network (`mongo-net`).
+
+**Core services:** FastAPI, MongoDB and Mongo Express.
+
+**Key deliverables:** Custom Docker image, REST CRUD API, container networking, environment-based database configuration, and browser-accessible services.
+
+**Verification:** Architecture diagram, Docker commands and logs, database records, application screenshots, and successful image build evidence.
+
+![Python Girls That Code application](evidence/07-python-girls-frontend.png)
+
+*Application frontend developed for this project. See Section 12 for the application implementation and database evidence.*
+
 ---
 
 ## 01 — Project Overview
@@ -137,10 +153,9 @@ Dev7a-docker-python/
 ├── .dockerignore
 ├── .env                  # Local Windows configuration; not committed
 ├── .env.docker           # Container runtime configuration; not committed
-├── .env.example          # Sanitised template, if added
 ├── architecture/
 │   └── docker-local-development-workflow.png
-├── evidence/             # 13 sanitised screenshots (see Section 15)
+├── evidence/             # Implementation screenshots referenced throughout this README
 ├── .gitignore
 ├── .python-version
 ├── pyproject.toml
@@ -149,7 +164,7 @@ Dev7a-docker-python/
 
 ```
 
-The application separates API logic, database configuration, frontend templates and static assets.
+The application separates API logic, database configuration, frontend templates and static assets. The `architecture/` and `evidence/` folders retain the deployment diagram and supporting implementation screenshots.
 
 The `.env` file contains local configuration and is excluded from Git to prevent credentials from being committed.
 
@@ -206,7 +221,7 @@ The MongoDB image download proceeded successfully.
 
 ### Implementation evidence
 
-**Figure 2 — Page 1 — Docker CLI initially unable to reach the Linux Engine, followed by a successful MongoDB image pull.**
+**Figure 2 — Docker CLI initially unable to reach the Linux Engine, followed by a successful MongoDB image pull.**
 
 ![Docker CLI initially unable to reach the Linux Engine, followed by a successful MongoDB image pull.](evidence/01-docker-engine-recovery.png)
 
@@ -246,7 +261,7 @@ An image is the packaged filesystem and configuration used to create containers.
 
 ### Implementation evidence
 
-**Figure 3 — Page 2 — Local Docker image list confirming MongoDB and Mongo Express were downloaded.**
+**Figure 3 — Local Docker image list confirming MongoDB and Mongo Express were downloaded.**
 
 ![Local Docker image list confirming MongoDB and Mongo Express were downloaded.](evidence/02-downloaded-docker-images.png)
 
@@ -291,7 +306,7 @@ This became especially relevant when connecting my locally running FastAPI appli
 
 ### Implementation evidence
 
-**Figure 4 — Page 2 — Creation and verification of the user-defined `mongo-net` bridge network.**
+**Figure 4 — Creation and verification of the user-defined `mongo-net` bridge network.**
 
 ![Creation and verification of the user-defined `mongo-net` bridge network.](evidence/03-custom-docker-network.png)
 
@@ -302,7 +317,7 @@ This became especially relevant when connecting my locally running FastAPI appli
 
 I started MongoDB in detached mode, configured its initial administrator credentials and attached it to the custom Docker network.
 
-The following example uses placeholder credentials rather than real project secrets.
+The following command shows the **revised MongoDB container configuration**, after I discovered that the initial container had no published host port (see Section 10). The placeholders below are not real credentials; replace them with local values before running the command. For shared or production environments, avoid placing secrets directly in shell commands.
 
 ```bash
 docker run -d \
@@ -403,7 +418,7 @@ I used Mongo Express to create and inspect the application's database and `user
 
 ### Implementation evidence
 
-**Figure 5 — Page 3 — Mongo Express successfully opened in the browser, showing the `user-account` database.**
+**Figure 5 — Mongo Express successfully opened in the browser, showing the `user-account` database.**
 
 ![Mongo Express successfully opened in the browser, showing the `user-account` database.](evidence/04-mongo-express-database.png)
 
@@ -498,7 +513,7 @@ docker rm chioma_mongodb
 
 ```
 
-The recreated container included the MongoDB port mapping.
+The recreated container included the MongoDB port mapping shown in Section 07. This allowed FastAPI running on Windows to connect through the host loopback interface.
 
 I also learned that `docker update` does not provide a way to add a new published port mapping to an existing container.
 
@@ -508,7 +523,7 @@ This introduces a key concept explored further in the Docker volumes project.
 
 ### Implementation evidence
 
-**Figure 6 — Page 4 — Investigation and recreation of MongoDB after identifying the missing host port mapping.**
+**Figure 6 — Investigation and recreation of MongoDB after identifying the missing host port mapping.**
 
 ![Investigation and recreation of MongoDB after identifying the missing host port mapping.](evidence/05-mongodb-port-troubleshooting.png)
 
@@ -573,7 +588,7 @@ This confirmed that the Python application could communicate with MongoDB runnin
 
 ### Implementation evidence
 
-**Figure 7 — Page 5 — FastAPI database integration and terminal connectivity test against containerised MongoDB.**
+**Figure 7 — FastAPI database integration and terminal connectivity test against containerised MongoDB.**
 
 ![FastAPI database integration and terminal connectivity test against containerised MongoDB.](evidence/06-python-mongodb-connectivity.png)
 
@@ -641,11 +656,11 @@ The frontend is served by FastAPI, while its CSS and images are served through t
 
 ### Implementation evidence
 
-**Figure 8 — Page 6, top — Custom Python Girls That Code profile form running in the browser.**
+**Figure 8 — Custom Python Girls That Code profile form running in the browser.**
 
 ![Custom Python Girls That Code profile form running in the browser.](evidence/07-python-girls-frontend.png)
 
-**Figure 9 — Page 6, bottom — The saved profile visible in Mongo Express under the `users` collection.**
+**Figure 9 — The saved profile visible in Mongo Express under the `users` collection.**
 
 ![The saved profile visible in Mongo Express under the `users` collection.](evidence/08-mongodb-stored-profile.png)
 
@@ -699,15 +714,15 @@ Here, `-t` assigns the repository name and version tag. The final `.` supplies t
 
 ### Implementation evidence
 
-**Figure 10 — Page 7 — The completed Python 3.13 / `uv` / Uvicorn Dockerfile in VS Code.**
+**Figure 10 — The completed Python 3.13 / `uv` / Uvicorn Dockerfile in VS Code.**
 
 ![The completed Python 3.13 / `uv` / Uvicorn Dockerfile in VS Code.](evidence/09-fastapi-dockerfile.png)
 
-**Figure 11 — Page 9, top — Successful Docker image build from the project root.**
+**Figure 11 — Successful Docker image build from the project root.**
 
 ![Successful Docker image build from the project root.](evidence/10-docker-build-success.png)
 
-**Figure 12 — Page 9, bottom — The tagged `python-girls-that-code:1.0` image in `docker images`.**
+**Figure 12 — The tagged `python-girls-that-code:1.0` image in `docker images`.**
 
 ![The tagged `python-girls-that-code:1.0` image in `docker images`.](evidence/11-custom-image-verification.png)
 
@@ -776,45 +791,32 @@ This demonstrates that the web application is being served by the container rath
 
 ### Implementation evidence
 
-**Figure 13 — Page 10, middle — `docker ps` verifying the three services and the published FastAPI port.**
+**Figure 13 — `docker ps` verifying the three services and the published FastAPI port.**
 
 ![`docker ps` verifying the three services and the published FastAPI port.](evidence/12-three-running-containers.png)
 
-**Figure 14 — Page 10, bottom — Uvicorn startup logs confirming the FastAPI container is serving on port 8000.**
+**Figure 14 — Uvicorn startup logs confirming the FastAPI container is serving on port 8000.**
 
 ![Uvicorn startup logs confirming the FastAPI container is serving on port 8000.](evidence/13-fastapi-container-logs.png)
 
 
-
-
 ---
 
-## 15 — Evidence Register & Screenshot Source Guide
+## 15 — Implementation Evidence Summary
 
-The screenshots in this README are placed **beside the stages they verify**, not collected here as a detached gallery. Every filename below corresponds to a screenshot in my original 11-page execution walkthrough. The **source page** tells me exactly which image to crop and save. All screenshots must be sanitised before committing to GitHub.
+Evidence is embedded **alongside the implementation stages it supports**, so the reader can connect each command, decision and troubleshooting outcome with its corresponding screenshot. The repository also includes a standalone architecture diagram in `architecture/docker-local-development-workflow.png` (Figure 1).
 
-| README figure | Screenshot to extract from execution notes | Source page | Save as |
-| :-- | :-- | :--: | :-- |
-| 2 | Docker Engine connection error followed by successful `docker pull mongo` | **1** | `evidence/01-docker-engine-recovery.png` |
-| 3 | `docker images` showing MongoDB and Mongo Express images | **2** | `evidence/02-downloaded-docker-images.png` |
-| 4 | `docker network create mongo-net` and `docker network ls` | **2** | `evidence/03-custom-docker-network.png` |
-| 5 | Mongo Express interface showing `user-account` database | **3** | `evidence/04-mongo-express-database.png` |
-| 6 | Terminal showing the MongoDB port-mapping investigation/recreation | **4** | `evidence/05-mongodb-port-troubleshooting.png` |
-| 7 | VS Code database connection code and successful terminal test | **5** | `evidence/06-python-mongodb-connectivity.png` |
-| 8 | Python Girls That Code browser application | **6 (top)** | `evidence/07-python-girls-frontend.png` |
-| 9 | Mongo Express `users` collection with the saved profile | **6 (bottom)** | `evidence/08-mongodb-stored-profile.png` |
-| 10 | VS Code displaying the completed Dockerfile | **7** | `evidence/09-fastapi-dockerfile.png` |
-| 11 | Successful `docker build` output | **9 (top)** | `evidence/10-docker-build-success.png` |
-| 12 | `docker images` showing `python-girls-that-code:1.0` | **9 (bottom)** | `evidence/11-custom-image-verification.png` |
-| 13 | `docker ps` showing the FastAPI, MongoDB and Mongo Express containers | **10 (middle)** | `evidence/12-three-running-containers.png` |
-| 14 | `docker logs` showing Uvicorn listening on `0.0.0.0:8000` | **10 (bottom)** | `evidence/13-fastapi-container-logs.png` |
+| Evidence category | Figures | What the evidence demonstrates |
+| :-- | :-- | :-- |
+| Docker environment and images | 2–3 | Docker Engine recovery and successful MongoDB/Mongo Express image downloads |
+| Docker networking | 4–6 | Custom bridge network, Mongo Express database access, and host port-mapping troubleshooting |
+| Python application and database | 7–9 | PyMongo connectivity, custom FastAPI frontend, and a saved MongoDB profile |
+| Docker image creation | 10–12 | Python Dockerfile, successful image build, and tagged local image |
+| Container deployment | 13–14 | Three running services and Uvicorn startup logs from the FastAPI container |
 
-**Page 8 is intentionally excluded from the screenshot list:** it displays a database connection URI containing a password. The environment-file design is explained in Section 14 using redacted examples instead. If I want an environment-configuration screenshot later, I will capture a fresh one with **all credentials replaced by placeholders**.
+**Evidence interpretation:** The frontend screenshot in Figure 8 was captured during local application development. It confirms the application interface, but does not independently prove that the site was served from a container. Figures 13 and 14 verify that the FastAPI container was running and that Uvicorn started successfully inside it. A browser capture taken while local Uvicorn is stopped would be an additional end-to-end verification of the containerised deployment.
 
-The final architecture image is **not** an existing screenshot in the walkthrough; it is a separate diagram to create and save as `architecture/docker-local-development-workflow.png` (Figure 1).
-
-**Evidence limitations:** The browser screenshot on page 6 demonstrates the application running and saving a profile during local development; it does **not by itself prove** that the frontend was served from the FastAPI container. The final `docker ps` and Uvicorn log screenshots on page 10 verify container execution. A fresh browser screenshot taken while local Uvicorn is stopped would provide even stronger final end-to-end evidence.
-
+All published evidence should be reviewed for credentials, private environment values and personal data before sharing.
 ---
 
 ## 16 — Challenges, Troubleshooting & Lessons Learned
