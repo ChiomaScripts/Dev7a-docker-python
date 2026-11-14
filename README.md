@@ -816,7 +816,6 @@ Evidence is embedded **alongside the implementation stages it supports**, so the
 
 **Evidence interpretation:** The frontend screenshot in Figure 8 was captured during local application development. It confirms the application interface, but does not independently prove that the site was served from a container. Figures 13 and 14 verify that the FastAPI container was running and that Uvicorn started successfully inside it. A browser capture taken while local Uvicorn is stopped would be an additional end-to-end verification of the containerised deployment.
 
-All published evidence should be reviewed for credentials, private environment values and personal data before sharing.
 ---
 
 ## 16 — Challenges, Troubleshooting & Lessons Learned
