@@ -128,7 +128,6 @@ uv run python --version
 
 ```
 
-This introduced me to Python interpreter pinning, project-level Python requirements, virtual environments and dependency resolution using `uv`.
 
 ### Application structure
 
