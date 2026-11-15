@@ -29,11 +29,11 @@ This project explores how Docker can be used to establish a local development en
 
 The original training demo uses a Node.js application alongside MongoDB and Mongo Express. I chose to adapt the implementation using **Python and FastAPI**, building my own application rather than relying entirely on the provided JavaScript source code.
 
-This allowed me to combine my existing Python knowledge with new Docker concepts while gaining practical experience in application development, database integration, container networking and troubleshooting.
+This allowed me to combine my existing Python knowledge with Docker concepts while reinforcing practical experience in application development, database integration, container networking and troubleshooting.
 
-The application, **Python Girls That Code**, is a profile management platform where coding enthusiasts can create and manage their profiles, including their names, email addresses, job titles, biographies and technical skills.
+The application, **Python Girls That Code**, is a profile management platform where coding enthusiasts can create and manage their profiles.
 
-The final implementation packages FastAPI into a custom Docker image and runs it alongside MongoDB and Mongo Express on a shared user-defined Docker network. The application can also run directly on Windows for local development.
+The final implementation packages FastAPI into a custom Docker image and runs it alongside MongoDB and Mongo Express on a shared defined Docker network. The application can also run directly on Windows for local development.
 
 ### Project objectives
 
