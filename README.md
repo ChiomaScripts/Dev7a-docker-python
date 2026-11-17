@@ -2,6 +2,13 @@
 
 **Docker Image Build & Deployment | Container Networking | FastAPI | MongoDB**
 
+
+![Docker](https://img.shields.io/badge/Docker-Containerisation-2496ED?logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-FastAPI-009688?logo=python&logoColor=white)
+![Database](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white)
+![Networking](https://img.shields.io/badge/Networking-Bridge-6C63FF)
+![Status](https://img.shields.io/badge/Status-Completed-2EA44F)
+
 Part of my hands-on DevOps engineering portfolio, documenting my progression through containerisation, application deployment, infrastructure automation and cloud technologies.
 
 
